@@ -1,47 +1,61 @@
 -- Weather:
 -- * rain
 -- * snow
--- * wind (not implemented)
 
-assert(minetest.add_particlespawner, "I told you to run the latest GitHub!")
+assert(minetest.add_particlespawner, "Your Minetest version is incompatible with this mod")
 
-addvectors = function (v1, v2)
-	return {x=v1.x+v2.x, y=v1.y+v2.y, z=v1.z+v2.z}
+weather = {
+  state = "none",
+  players = {},
+}
+
+weather.remove_weather = function (player_name)
+    local player_info = weather.players[player_name]
+    minetest.sound_stop(player_info.sound_handler)
+    local p = minetest.get_player_by_name(player_name)
+    if p ~= nil then
+      p:set_sky(player_info.sky_box[1], player_info.sky_box[2], player_info.sky_box[3])
+    end
 end
 
 save_weather = function ()
-	local file = io.open(minetest.get_worldpath().."/weather", "w+")
-	file:write(weather)
-	file:close()
+  for player_name, player_info in pairs(weather.players) do
+    if player_info ~= nil then
+      weather.remove_weather(player_name)
+    end
+  end
+  weather.players = {}
+  local file = io.open(minetest.get_worldpath().."/weather", "w+")
+  file:write(weather.state)
+  file:close()
 end
 
 read_weather = function ()
-	local file = io.open(minetest.get_worldpath().."/weather", "r")
-	if not file then return end
-	local readweather = file:read()
-	file:close()
-	return readweather
+  local file = io.open(minetest.get_worldpath().."/weather", "r")
+  if not file then return end
+  local readweather = file:read()
+  file:close()
+  return readweather
 end
 
-weather = read_weather()
+weather.state = read_weather()
 
 minetest.register_globalstep(function(dtime)
-	if weather == "rain"
-	or weather == "snow" then
-		if math.random(1, 10000) == 1 then
-			weather = "none"
-			save_weather()
-		end
-	else
-		local ran = math.random(1, 5000000)
-		if ran == 1 then
-			weather = "rain"
-			save_weather()
-		elseif ran == 2 then
-			weather = "snow"
-			save_weather()
-		end
-	end
+  if weather.state == "rain" or weather.state == "snow" then
+    if math.random(1, 10000) == 1 then
+      weather.state = "none"
+      save_weather()
+    end
+  else
+    if math.random(1, 50000) == 1 then
+      weather.state = "rain"
+      save_weather()
+    end
+    if math.random(1, 50000) == 2 then
+      weather.state = "snow"
+      save_weather()
+    end
+  end
 end)
 
 dofile(minetest.get_modpath("weather").."/rain.lua")

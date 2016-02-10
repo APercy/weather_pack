@@ -1,74 +1,54 @@
 -- Snow
-local spawnerdef = {
-	amount = 8,
-	time = 0.5,
-	minexptime = 3,
-	maxexptime = 15,
-	minsize = 0.8,
-	maxsize = 1.2,
-	collisiondetection = true,
-}
+
 minetest.register_globalstep(function(dtime)
-	if weather ~= "snow" then
-		return
-	end
-	for _, player in ipairs(minetest.get_connected_players()) do
-		local ppos = player:getpos()
+  if weather.state ~= "snow" then return end
+  for _, player in ipairs(minetest.get_connected_players()) do
+    local ppos = player:getpos()
 
-		-- Make sure player is not in a cave/house...
-		--if minetest.get_node_light(ppos, 0.5) ~= 15 then return end
-
-		spawnerdef.minpos = addvectors(ppos, {x=-9, y=7, z=-9})
-		spawnerdef.maxpos = addvectors(ppos, {x= 9, y=7, z= 9})
-
-		spawnerdef.minvel = {x=0, y= -1, z=0}
-		spawnerdef.maxvel = spawnerdef.minvel
-		spawnerdef.minacc = {x=0, y= 0, z=0}
-		spawnerdef.maxacc = spawnerdef.minacc
-
-		spawnerdef.playername = player:get_player_name()
-
-		for _,i in ipairs({"", "2"}) do
-			spawnerdef.texture = "weather_snow"..i..".png"
-			minetest.add_particlespawner(spawnerdef)
-		end
-	end
+    add_long_range_particlespawner(player)
+  end
 end)
 
---[[local snow_box =
-{
-	type  = "fixed",
-	fixed = {-0.5, -0.5, -0.5, 0.5, -0.4, 0.5}
-}
+function add_long_range_particlespawner(player)
+  local ppos = player:getpos()
+  local long_range_pos_min = {}
+  long_range_pos_min.x = getRandomRange(ppos.x, -20)
+  long_range_pos_min.y = ppos.y + 10
+  long_range_pos_min.z = getRandomRange(ppos.z, -20)
 
--- Snow cover
-minetest.register_node("weather:snow_cover", {
-	tiles = {"weather_snow_cover.png"},
-	drawtype = "nodebox",
-	paramtype = "light",
-	node_box = snow_box,
-	selection_box = snow_box,
-	groups = {not_in_creative_inventory = 1, crumbly = 3, attached_node = 1},
-	drop = {}
-})
+  if minetest.env:get_node_light(long_range_pos_min, 0.5) ~= 15 then return end
 
---[ Enable this section if you have a very fast PC
-minetest.register_abm({
-	nodenames = {"group:crumbly", "group:snappy", "group:cracky", "group:choppy"},
-	neighbors = {"default:air"},
-	interval = 10.0,
-	chance = 80,
-	action = function (pos, node, active_object_count, active_object_count_wider)
-		if weather == "snow" then
-			if minetest.registered_nodes[node.name].drawtype == "normal"
-			or minetest.registered_nodes[node.name].drawtype == "allfaces_optional" then
-				local np = addvectors(pos, {x=0, y=1, z=0})
-				if minetest.get_node_light(np, 0.5) == 15
-				and minetest.get_node(np).name == "air" then
-					minetest.add_node(np, {name="weather:snow_cover"})
-				end
-			end
-		end
-	end
-})
-]]
+  local long_range_pos_max = {}
+  long_range_pos_max.x = getRandomRange(ppos.x, 20)
+  long_range_pos_max.y = ppos.y + 10
+  long_range_pos_max.z = getRandomRange(ppos.z, 20)
+
+  if minetest.env:get_node_light(long_range_pos_max, 0.5) ~= 15 then return end
+
+  local random_texture = nil
+  if math.random() > 0.5 then
+    random_texture = "weather_snowflake1.png"
+  else
+    random_texture = "weather_snowflake2.png"
+  end
+
+  minetest.add_particlespawner({
+    amount=30,
+    time=1.5,
+    minpos=long_range_pos_min,
+    maxpos=long_range_pos_max,
+    minvel={x=-1, y=-2, z=-1},
+    maxvel={x=1, y=-7, z=1},
+    minacc={x=-1, y=-2, z=-1},
+    maxacc={x=1, y=-0.3, z=1},
+    minexptime=0.5,
+    maxexptime=1.5,
+    minsize=0.5,
+    maxsize=3,
+    collisiondetection=true,
+    vertical=false,
+    texture=random_texture,
+    player=player:get_player_name()})
+end
+
+
