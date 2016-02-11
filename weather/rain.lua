@@ -107,7 +107,6 @@ minetest.register_globalstep(function(dtime)
     local rain_nearby = rain.add_short_range_particlespawner(player)
     local rain_distant = rain.add_long_range_particlespawner(player)
     
-    print(minetest.get_timeofday())
     if rain_nearby or rain_distant then
       if weather.players[player:get_player_name()] == nil then
         local player_name = player:get_player_name()
