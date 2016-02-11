@@ -16,14 +16,14 @@ function add_long_range_particlespawner(player)
   long_range_pos_min.y = ppos.y + 10
   long_range_pos_min.z = getRandomRange(ppos.z, -20)
 
-  if minetest.env:get_node_light(long_range_pos_min, 0.5) ~= 15 then return end
+  if minetest.get_node_light(long_range_pos_min, 0.5) ~= 15 then return end
 
   local long_range_pos_max = {}
   long_range_pos_max.x = getRandomRange(ppos.x, 20)
   long_range_pos_max.y = ppos.y + 10
   long_range_pos_max.z = getRandomRange(ppos.z, 20)
 
-  if minetest.env:get_node_light(long_range_pos_max, 0.5) ~= 15 then return end
+  if minetest.get_node_light(long_range_pos_max, 0.5) ~= 15 then return end
 
   local random_texture = nil
   if math.random() > 0.5 then

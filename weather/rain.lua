@@ -19,7 +19,7 @@ rain.add_short_range_particlespawner = function (player)
   short_range_pos_min.y = ppos.y + 3
   short_range_pos_min.z = getRandomRange(ppos.z, -3)
 
-  if minetest.env:get_node_light(short_range_pos_min, 0.5) ~= 15 then
+  if minetest.get_node_light(short_range_pos_min, 0.5) ~= 15 then
     return false
   end
 
@@ -28,7 +28,7 @@ rain.add_short_range_particlespawner = function (player)
   short_range_pos_max.y = ppos.y + 3
   short_range_pos_max.z = getRandomRange(ppos.z, 3)
 
-  if minetest.env:get_node_light(short_range_pos_max, 0.5) ~= 15 then
+  if minetest.get_node_light(short_range_pos_max, 0.5) ~= 15 then
     return false
   end
 
@@ -61,7 +61,7 @@ rain.add_long_range_particlespawner = function (player)
   long_range_pos_min.y = ppos.y + 10
   long_range_pos_min.z = getRandomRange(ppos.z, -20)
 
-  if minetest.env:get_node_light(long_range_pos_min, 0.5) ~= 15 then
+  if minetest.get_node_light(long_range_pos_min, 0.5) ~= 15 then
     return false
   end
 
@@ -70,7 +70,7 @@ rain.add_long_range_particlespawner = function (player)
   long_range_pos_max.y = ppos.y + 10
   long_range_pos_max.z = getRandomRange(ppos.z, 20)
 
-  if minetest.env:get_node_light(long_range_pos_max, 0.5) ~= 15 then
+  if minetest.get_node_light(long_range_pos_max, 0.5) ~= 15 then
     return false
   end
 
