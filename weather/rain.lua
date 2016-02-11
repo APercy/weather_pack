@@ -103,6 +103,12 @@ minetest.register_globalstep(function(dtime)
   if weather.state ~= "rain" then return end
   for _, player in ipairs(minetest.get_connected_players()) do
     local ppos = player:getpos()
+    local offset = player:get_eye_offset()
+    local player_eye_pos = {x = ppos.x + offset.x, y = ppos.y+offset.y + 1.5, z = ppos.z+offset.z}
+
+    if minetest.get_node_level(player_eye_pos) == 8 then
+      return false
+    end
 
     local rain_nearby = rain.add_short_range_particlespawner(player)
     local rain_distant = rain.add_long_range_particlespawner(player)
