@@ -8,6 +8,10 @@ Weathers included
 * snow
 * thunder
 
+Commands
+-----------------------
+`set_weather <weather>` requires `weather_manager` privilege.
+
 Dependencies
 -----------------------
 Thunder weather requres [lightning](https://github.com/minetest-mods/lightning) mod.
