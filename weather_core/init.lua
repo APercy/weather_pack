@@ -115,7 +115,7 @@ minetest.register_privilege("weather_manager", {
 minetest.register_chatcommand("set_weather", {
   params = "<weather>",
   description = "Changes weather by given param, parameter none will remove weather.",
-  privs = {rain_manager = true},
+  privs = {weather_manager = true},
   func = function(name, param)
     if (param == "none") then
       if (weather.state ~= nil and weather.known_weathers[weather.state] ~= nil) then
