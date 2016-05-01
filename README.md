@@ -1,5 +1,20 @@
-Weather mod for Minetest (http://minetest.net/)
+weather-pack
 =======================
+Weather mod for Minetest (http://minetest.net/)
+
+Weathers included
+-----------------------
+* rain
+* snow
+* thunder
+
+Dependencies
+-----------------------
+Thunder weather requres [lightning](https://github.com/minetest-mods/lightning) mod.
+
+Configuration properties
+-----------------------
+Weather mod for indoor check depends on sunlight propogation check. Some nodes (e.g. glass block) propogates sunlight and thus weather particles will go through it. To change that set `weather_allow_override_nodes=true` in `minetest.conf` file. Be aware that just few nodes will be override and these blocks needs to be re-builded to take effect. Maybe in future other 'cheap' way to check indoor will be available.
 
 License of source code:
 -----------------------
@@ -11,12 +26,14 @@ Authors of media files:
 TeddyDesTodes:
 Snowflakes licensed under CC-BY-SA 3.0 by from weather branch at https://github.com/TeddyDesTodes/minetest/tree/weather
 
-  * `weather_snowflake1.png` - CC-BY-SA 3.0
-  * `weather_snowflake2.png` - CC-BY-SA 3.0
+  * `snow_snowflake1.png` - CC-BY-SA 3.0
+  * `snow_snowflake2.png` - CC-BY-SA 3.0
 
 xeranas:
 
-  * `weather_raindrop.png` - CC-0
+  * `rain_raindrop_1.png` - CC-0
+  * `rain_raindrop_2.png` - CC-0
+  * `rain_raindrop_3.png` - CC-0
 
 inchadney (http://freesound.org/people/inchadney/):
 
