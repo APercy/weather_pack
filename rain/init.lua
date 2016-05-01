@@ -122,6 +122,10 @@ minetest.register_globalstep(function(dtime)
     return false
   end
   
+  rain.make_weather()
+end)
+
+rain.make_weather = function()
   for _, player in ipairs(minetest.get_connected_players()) do
     if (is_underwater(player)) then 
       return false
@@ -130,7 +134,7 @@ minetest.register_globalstep(function(dtime)
     rain.add_rain_particles(player, dtime)
     rain.update_sound(player)
   end
-end)
+end
 
 if weather.known_weathers.rain == nil then
   weather.known_weathers.rain = {
