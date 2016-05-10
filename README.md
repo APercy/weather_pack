@@ -22,7 +22,7 @@ Weather mod for indoor check depends on sunlight propogation check. Some nodes (
 
 License of source code:
 -----------------------
-LGPL
+LGPL 2.1+
 
 Authors of media files:
 -----------------------
