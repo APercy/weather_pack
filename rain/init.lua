@@ -1,6 +1,6 @@
 rain = {}
 
-rain.particles_count = 50
+rain.particles_count = 35
 
 rain.sound_handler = function(player) 
   return minetest.sound_play("weather_rain", {
@@ -136,8 +136,8 @@ rain.make_weather = function()
   end
 end
 
-if weather.known_weathers.rain == nil then
-  weather.known_weathers.rain = {
+if weather.reg_weathers.rain == nil then
+  weather.reg_weathers.rain = {
     chance = 15,
     clear = rain.clear
   }

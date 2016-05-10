@@ -21,11 +21,18 @@ weather = {
   end_time = nil,
   
   -- registered weathers
-  known_weathers = {}
+  reg_weathers = {},
+
+  -- automaticly calculates intervals and swap weathers 
+  auto_mode = true
 }
 
-weather.get_rand_end_time = function()
-  return os.time() + math.random(weather.min_duration, weather.max_duration);
+weather.get_rand_end_time = function(min_duration, max_duration)
+  if min_duration ~= nil and max_duration ~= nil then
+    return os.time() + math.random(min_duration, max_duration);
+  else
+    return os.time() + math.random(weather.min_duration, weather.max_duration);
+  end 
 end
 
 -- checks if player is undewater. This is needed in order to
@@ -84,27 +91,38 @@ function get_random_pos_by_player_look_dir(player)
 end
 
 minetest.register_globalstep(function(dtime)
+  if weather.auto_mode == false then
+    return 0
+  end
+
   -- recalculate weather only when there aren't currently any
   if (weather.state ~= "none") then
     if (weather.end_time ~= nil and weather.end_time <= os.time()) then
-      weather.known_weathers[weather.state].clear()
+      weather.reg_weathers[weather.state].clear()
       weather.state = "none"
     end
-  end
-  
-  if (weather.next_check <= os.time()) then
-    for reg_weather_name, reg_weather_obj in pairs(weather.known_weathers) do 
-      if (reg_weather_obj ~= nil and reg_weather_obj.chance ~= nil) then
-        local random_roll = math.random(0,100)
-        if (random_roll <= reg_weather_obj.chance) then
-          weather.state = reg_weather_name
-          weather.end_time = weather.get_rand_end_time()
-        end
-      end
+  elseif (weather.next_check <= os.time()) then
+    for weather_name, weather_meta in pairs(weather.reg_weathers) do 
+      weather.set_random_weather(weather_name, weather_meta)
     end
+    -- fallback next_check set, weather 'none' will be. 
     weather.next_check = os.time() + weather.check_interval
   end
 end)
+
+-- sets random weather (which could be 'regular' (no weather)).
+weather.set_random_weather = function(weather_name, weather_meta)
+  if weather.next_check > os.time() then return 0 end
+
+  if (weather_meta ~= nil and weather_meta.chance ~= nil) then
+    local random_roll = math.random(0,100)
+    if (random_roll <= weather_meta.chance) then
+      weather.state = weather_name
+      weather.end_time = weather.get_rand_end_time(weather_meta.min_duration, weather_meta.max_duration)
+      weather.next_check = os.time() + weather.check_interval
+    end
+  end
+end
 
 minetest.register_privilege("weather_manager", {
   description = "Gives ability to control weather",
@@ -118,16 +136,16 @@ minetest.register_chatcommand("set_weather", {
   privs = {weather_manager = true},
   func = function(name, param)
     if (param == "none") then
-      if (weather.state ~= nil and weather.known_weathers[weather.state] ~= nil) then
-        weather.known_weathers[weather.state].clear()
+      if (weather.state ~= nil and weather.reg_weathers[weather.state] ~= nil) then
+        weather.reg_weathers[weather.state].clear()
         weather.state = param
       end
       weather.state = "none"
     end
   
-    if (weather.known_weathers ~= nil and weather.known_weathers[param] ~= nil) then
-      if (weather.state ~= nil and weather.state ~= "none" and weather.known_weathers[weather.state] ~= nil) then
-        weather.known_weathers[weather.state].clear()
+    if (weather.reg_weathers ~= nil and weather.reg_weathers[param] ~= nil) then
+      if (weather.state ~= nil and weather.state ~= "none" and weather.reg_weathers[weather.state] ~= nil) then
+        weather.reg_weathers[weather.state].clear()
       end
       weather.state = param
     end

@@ -51,8 +51,8 @@ minetest.register_globalstep(function(dtime)
 end)
 
 -- register snow weather
-if weather.known_weathers.snow == nil then
-  weather.known_weathers.snow = {
+if weather.reg_weathers.snow == nil then
+  weather.reg_weathers.snow = {
     chance = 10,
     clear = function() end
   }

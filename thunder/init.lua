@@ -27,9 +27,11 @@ thunder.clear = function()
 end
 
 -- register thunderstorm weather
-if weather.known_weathers.thunder == nil then
-  weather.known_weathers.thunder = {
+if weather.reg_weathers.thunder == nil then
+  weather.reg_weathers.thunder = {
     chance = 5,
-    clear = thunder.clear
+    clear = thunder.clear,
+    min_duration = 120,
+    max_duration = 600,
   }
 end
