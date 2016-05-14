@@ -20,6 +20,8 @@ Configuration properties
 -----------------------
 Weather mod for indoor check depends on sunlight propogation check. Some nodes (e.g. glass block) propogates sunlight and thus weather particles will go through it. To change that set `weather_allow_override_nodes=true` in `minetest.conf` file. Be aware that just few nodes will be override and these blocks needs to be re-builded to take effect. Maybe in future other 'cheap' way to check indoor will be available.
 
+Weather mod mostly relies on particles generation however for some small things ABM may be used. Users which do not want it can disable ABM with property `weather_allow_abm=false`.
+
 License of source code:
 -----------------------
 LGPL 2.1+
