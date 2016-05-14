@@ -24,7 +24,10 @@ weather = {
   reg_weathers = {},
 
   -- automaticly calculates intervals and swap weathers 
-  auto_mode = true
+  auto_mode = true,
+  
+  -- global flag to disable/enable ABM logic. 
+  allow_abm = true,
 }
 
 weather.get_rand_end_time = function(min_duration, max_duration)
@@ -33,6 +36,13 @@ weather.get_rand_end_time = function(min_duration, max_duration)
   else
     return os.time() + math.random(weather.min_duration, weather.max_duration);
   end 
+end
+
+weather.is_outdoor = function(pos)
+  if minetest.get_node_light({x=pos.x, y=pos.y + 1, z=pos.z}, 0.5) == 15 then
+    return true
+  end
+  return false
 end
 
 -- checks if player is undewater. This is needed in order to
@@ -151,6 +161,13 @@ minetest.register_chatcommand("set_weather", {
     end
   end
 })
+
+-- Configuration setting which allows user to disable ABM for weathers (if they use it).
+-- Weather mods expected to be use this flag before registering ABM.
+local weather_allow_abm = minetest.setting_getbool("weather_allow_abm")
+if weather_allow_abm ~= nil and weather_allow_abm == false then
+  weather.allow_abm = false
+end 
 
 -- Overrides nodes 'sunlight_propagates' attribute for efficient indoor check (e.g. for glass roof).
 -- Controlled from minetest.conf setting and by default it is disabled.

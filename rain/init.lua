@@ -1,6 +1,13 @@
-rain = {}
+rain = {
+  -- max rain particles created at time 
+  particles_count = 35,
 
-rain.particles_count = 35
+  -- flag to turn on/off extinguish fire for rain 
+  extinguish_fire = true,
+  
+  -- flag useful when mixing weathers
+  raining = false,
+}
 
 rain.sound_handler = function(player) 
   return minetest.sound_play("weather_rain", {
@@ -111,6 +118,7 @@ end
 
 -- callback function for removing rain
 rain.clear = function() 
+  rain.raining = false
   for _, player in ipairs(minetest.get_connected_players()) do
     rain.remove_sound(player)
     rain.remove_player(player)
@@ -126,6 +134,7 @@ minetest.register_globalstep(function(dtime)
 end)
 
 rain.make_weather = function()
+  rain.raining = true
   for _, player in ipairs(minetest.get_connected_players()) do
     if (is_underwater(player)) then 
       return false
@@ -141,4 +150,20 @@ if weather.reg_weathers.rain == nil then
     chance = 15,
     clear = rain.clear
   }
+end
+
+-- ABM for extinguish fire
+if weather.allow_abm then
+  minetest.register_abm({
+    nodenames = {"fire:basic_flame"},
+    interval = 4.0,
+    chance = 2,
+    action = function(pos, node, active_object_count, active_object_count_wider)
+      if rain.raining and rain.extinguish_fire then
+        if weather.is_outdoor(pos) then
+          minetest.remove_node(pos)
+        end
+      end
+    end
+  })
 end
