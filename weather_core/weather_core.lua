@@ -47,7 +47,7 @@ end
 
 -- checks if player is undewater. This is needed in order to
 -- turn off weather particles generation.
-function is_underwater(player)
+weather.is_underwater = function(player)
     local ppos = player:getpos()
     local offset = player:get_eye_offset()
     local player_eye_pos = {x = ppos.x + offset.x, 
@@ -60,17 +60,9 @@ function is_underwater(player)
     return false
 end
 
--- returns random number between a and b.
-function random_pos(a, b)
-  if (a > b) then
-    return math.random(b, a);
-  end
-  return math.random(a, b);
-end
-
 -- trying to locate position for particles by player look direction for performance reason.
 -- it is costly to generate many particles around player so goal is focus mainly on front view.  
-function get_random_pos_by_player_look_dir(player)
+weather.get_random_pos_by_player_look_dir = function(player)
   local look_dir = player:get_look_dir()
   local player_pos = player:getpos()
 
@@ -96,7 +88,7 @@ function get_random_pos_by_player_look_dir(player)
     end
   end
 
-  random_pos_y = math.random() + random_pos(player_pos.y + 1, player_pos.y + 7)
+  random_pos_y = math.random() + math.random(player_pos.y + 1, player_pos.y + 7)
   return random_pos_x, random_pos_y, random_pos_z
 end
 
