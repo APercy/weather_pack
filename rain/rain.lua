@@ -38,7 +38,7 @@ rain.add_rain_particles = function(player, dtime)
         pos = {x=random_pos_x, y=random_pos_y, z=random_pos_z},
         velocity = {x=0, y=-10, z=0},
         acceleration = {x=0, y=-30, z=0},
-        expirationtime = 0.3,
+        expirationtime = 0.2,
         size = math.random(0.5, 3),
         collisiondetection = true,
         vertical = true,
