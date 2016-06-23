@@ -3,7 +3,7 @@ snow = {}
 snow.particles_count = 25
 
 -- calculates coordinates and draw particles for snow weather 
-snow.add_rain_particles = function(player, dtime)
+snow.add_rain_particles = function(player)
   rain.last_rp_count = 0
   for i=snow.particles_count, 1,-1 do
     local random_pos_x, random_pos_y, random_pos_z = weather.get_random_pos_by_player_look_dir(player)
@@ -47,7 +47,7 @@ minetest.register_globalstep(function(dtime)
     if (weather.is_underwater(player)) then 
       return false
     end
-    snow.add_rain_particles(player, dtime)
+    snow.add_rain_particles(player)
   end
 end)
 

@@ -28,7 +28,7 @@ end
 
 -- creating manually parctiles instead of particles spawner because of easier to control
 -- spawn position.
-rain.add_rain_particles = function(player, dtime)
+rain.add_rain_particles = function(player)
   rain.last_rp_count = 0
   for i=rain.particles_count, 1,-1 do
     local random_pos_x, random_pos_y, random_pos_z = weather.get_random_pos_by_player_look_dir(player)
@@ -141,7 +141,7 @@ rain.make_weather = function()
       return false
     end
     rain.add_player(player)
-    rain.add_rain_particles(player, dtime)
+    rain.add_rain_particles(player)
     rain.update_sound(player)
   end
 end
