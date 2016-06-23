@@ -41,6 +41,7 @@ rain.add_rain_particles = function(player, dtime)
         expirationtime = 0.2,
         size = math.random(0.5, 3),
         collisiondetection = true,
+        collision_removal = true,
         vertical = true,
         texture = rain.get_texture(),
         playername = player:get_player_name()

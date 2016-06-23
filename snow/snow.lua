@@ -17,6 +17,7 @@ snow.add_rain_particles = function(player, dtime)
         expirationtime = 0.6,
         size = math.random(0.5, 1),
         collisiondetection = true,
+        collision_removal = true,
         vertical = true,
         texture = snow.get_texture(),
         playername = player:get_player_name()
