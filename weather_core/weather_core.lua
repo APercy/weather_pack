@@ -53,8 +53,8 @@ weather.is_underwater = function(player)
     local player_eye_pos = {x = ppos.x + offset.x, 
                             y = ppos.y + offset.y + 1.5, 
                             z = ppos.z + offset.z}
-    
-    if minetest.get_node_level(player_eye_pos) == 8 then
+    local node_level = minetest.get_node_level(player_eye_pos)
+    if node_level == 8 or node_level == 7 then
       return true
     end
     return false
