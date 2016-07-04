@@ -7,6 +7,10 @@ rain = {
   
   -- flag useful when mixing weathers
   raining = false,
+
+  -- keeping last timeofday value (rounded). 
+  -- Defaulted to non-existing value for initial comparing.
+  sky_last_update = -1,
 }
 
 rain.sound_handler = function(player) 
@@ -19,16 +23,36 @@ end
 
 -- set skybox based on time (darker if night lighter otherwise)
 rain.set_sky_box = function(player)
-  if (minetest.get_timeofday() < 0.8) then
-    player:set_sky({r=65, g=80, b=100}, "plain", nil)
-  else
-    player:set_sky({r=10, g=10, b=15}, "plain", nil)
+  local current_time = minetest.get_timeofday()
+  local diff = math.abs(rain.sky_last_update - math.floor(current_time * 10))
+  -- don't need update sky if time does not change significantly
+  if diff < 1 then
+    return
   end
+
+  local color_table = {}
+  color_table[0] = {r=6, g=8, b=8}
+  color_table[1] = {r=16, g=23, b=23}
+  color_table[2] = {r=32, g=46, b=46}
+  color_table[3] = {r=48, g=69, b=69}
+  color_table[4] = {r=64, g=92, b=92}
+  color_table[5] = {r=70, g=100, b=100}
+  color_table[6] = {r=64, g=92, b=92}
+  color_table[7] = {r=48, g=69, b=69}
+  color_table[8] = {r=32, g=46, b=46}
+  color_table[9] = {r=16, g=23, b=23}
+
+  local timeofday = current_time
+  local rounded_time = math.floor(timeofday * 10)
+
+  player:set_sky(color_table[rounded_time], "plain", nil)
+  rain.sky_last_update = rounded_time
 end
 
 -- creating manually parctiles instead of particles spawner because of easier to control
 -- spawn position.
 rain.add_rain_particles = function(player)
+
   rain.last_rp_count = 0
   for i=rain.particles_count, 1,-1 do
     local random_pos_x, random_pos_y, random_pos_z = weather.get_random_pos_by_player_look_dir(player)
@@ -70,7 +94,6 @@ rain.add_player = function(player)
   if weather.players[player:get_player_name()] == nil then
     local player_meta = {}
     player_meta.origin_sky = {player:get_sky()}
-    rain.set_sky_box(player)
     weather.players[player:get_player_name()] = player_meta
   end
 end
@@ -141,6 +164,7 @@ rain.make_weather = function()
       return false
     end
     rain.add_player(player)
+    rain.set_sky_box(player)
     rain.add_rain_particles(player)
     rain.update_sound(player)
   end
