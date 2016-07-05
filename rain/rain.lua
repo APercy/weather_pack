@@ -143,6 +143,7 @@ end
 -- callback function for removing rain
 rain.clear = function() 
   rain.raining = false
+  rain.sky_last_update = -1
   for _, player in ipairs(minetest.get_connected_players()) do
     rain.remove_sound(player)
     rain.remove_player(player)
