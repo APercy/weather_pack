@@ -26,14 +26,29 @@ snow.add_rain_particles = function(player)
   end
 end
 
+snow.set_sky_box = function()
+  skycolor.colors = {
+    {r=0, g=0, b=0},
+    {r=241, g=244, b=249},
+    {r=0, g=0, b=0},
+  }
+  skycolor.active = true
+end
+
+snow.clear = function() 
+  skycolor.active = false
+  skycolor.colors = {}
+  skycolor.set_default_sky()
+end
+
 -- Simple random texture getter
 snow.get_texture = function()
   local texture_name
   local random_number = math.random()
   if random_number > 0.5 then
-    texture_name = "snow_snowflake1.png"
+    texture_name = "weather_pack_snow_snowflake1.png"
   else
-    texture_name = "snow_snowflake2.png"
+    texture_name = "weather_pack_snow_snowflake2.png"
   end
   return texture_name;
 end
@@ -43,6 +58,7 @@ minetest.register_globalstep(function(dtime)
     return false
   end
   
+  snow.set_sky_box()
   for _, player in ipairs(minetest.get_connected_players()) do
     if (weather.is_underwater(player)) then 
       return false
@@ -55,6 +71,6 @@ end)
 if weather.reg_weathers.snow == nil then
   weather.reg_weathers.snow = {
     chance = 10,
-    clear = function() end
+    clear = snow.clear
   }
 end

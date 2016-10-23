@@ -21,32 +21,16 @@ rain.sound_handler = function(player)
   })
 end
 
--- set skybox based on time (darker if night lighter otherwise)
+-- set skybox based on time (uses skycolor api)
 rain.set_sky_box = function(player)
-  local current_time = minetest.get_timeofday()
-  local diff = math.abs(rain.sky_last_update - math.floor(current_time * 10))
-  -- don't need update sky if time does not change significantly
-  if diff < 1 then
-    return
-  end
-
-  local color_table = {}
-  color_table[0] = {r=6, g=8, b=8}
-  color_table[1] = {r=16, g=23, b=23}
-  color_table[2] = {r=32, g=46, b=46}
-  color_table[3] = {r=48, g=69, b=69}
-  color_table[4] = {r=64, g=92, b=92}
-  color_table[5] = {r=70, g=100, b=100}
-  color_table[6] = {r=64, g=92, b=92}
-  color_table[7] = {r=48, g=69, b=69}
-  color_table[8] = {r=32, g=46, b=46}
-  color_table[9] = {r=16, g=23, b=23}
-
-  local timeofday = current_time
-  local rounded_time = math.floor(timeofday * 10)
-
-  player:set_sky(color_table[rounded_time], "plain", nil)
-  rain.sky_last_update = rounded_time
+  skycolor.colors = {
+    {r=0, g=0, b=0},
+    {r=85, g=86, b=98},
+    {r=152, g=150, b=159},
+    {r=85, g=86, b=98},
+    {r=0, g=0, b=0},
+  }
+  skycolor.active = true
 end
 
 -- creating manually parctiles instead of particles spawner because of easier to control
@@ -79,11 +63,11 @@ rain.get_texture = function()
   local texture_name
   local random_number = math.random()
   if random_number > 0.33 then
-    texture_name = "rain_raindrop_1.png"
+    texture_name = "weather_pack_rain_raindrop_1.png"
   elseif random_number > 0.66 then
-    texture_name = "rain_raindrop_2.png"
+    texture_name = "weather_pack_rain_raindrop_2.png"
   else
-    texture_name = "rain_raindrop_3.png"
+    texture_name = "weather_pack_rain_raindrop_3.png"
   end
   return texture_name;
 end
@@ -144,6 +128,9 @@ end
 rain.clear = function() 
   rain.raining = false
   rain.sky_last_update = -1
+  skycolor.active = false
+  skycolor.colors = {}
+  skycolor.set_default_sky()
   for _, player in ipairs(minetest.get_connected_players()) do
     rain.remove_sound(player)
     rain.remove_player(player)
@@ -160,12 +147,12 @@ end)
 
 rain.make_weather = function()
   rain.raining = true
+  rain.set_sky_box()
   for _, player in ipairs(minetest.get_connected_players()) do
     if (weather.is_underwater(player)) then 
       return false
     end
     rain.add_player(player)
-    rain.set_sky_box(player)
     rain.add_rain_particles(player)
     rain.update_sound(player)
   end
