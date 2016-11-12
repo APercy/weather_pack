@@ -1,6 +1,7 @@
 snow = {}
 
-snow.particles_count = 25
+snow.particles_count = 15
+snow.init_done = false
 
 -- calculates coordinates and draw particles for snow weather 
 snow.add_rain_particles = function(player)
@@ -14,8 +15,8 @@ snow.add_rain_particles = function(player)
         pos = {x=random_pos_x, y=random_pos_y, z=random_pos_z},
         velocity = {x = math.random(-1,-0.5), y = math.random(-2,-1), z = math.random(-1,-0.5)},
         acceleration = {x = math.random(-1,-0.5), y=-0.5, z = math.random(-1,-0.5)},
-        expirationtime = 0.6,
-        size = math.random(0.5, 1),
+        expirationtime = 2.0,
+        size = math.random(0.5, 2),
         collisiondetection = true,
         collision_removal = true,
         vertical = true,
@@ -27,18 +28,18 @@ snow.add_rain_particles = function(player)
 end
 
 snow.set_sky_box = function()
-  skycolor.colors = {
-    {r=0, g=0, b=0},
+  skycolor.add_layer(
+    "weather-pack-snow-sky",
+    {{r=0, g=0, b=0},
     {r=241, g=244, b=249},
-    {r=0, g=0, b=0},
-  }
+    {r=0, g=0, b=0}}
+  )
   skycolor.active = true
 end
 
 snow.clear = function() 
-  skycolor.active = false
-  skycolor.colors = {}
-  skycolor.set_default_sky()
+  skycolor.remove_layer("weather-pack-snow-sky")
+  snow.init_done = false
 end
 
 -- Simple random texture getter
@@ -53,12 +54,24 @@ snow.get_texture = function()
   return texture_name;
 end
 
+local timer = 0
 minetest.register_globalstep(function(dtime)
   if weather.state ~= "snow" then 
     return false
   end
   
-  snow.set_sky_box()
+  timer = timer + dtime;
+  if timer >= 0.5 then
+    timer = 0
+  else
+    return
+  end
+
+  if snow.init_done == false then
+    snow.set_sky_box()
+    snow.init_done = true
+  end
+
   for _, player in ipairs(minetest.get_connected_players()) do
     if (weather.is_underwater(player)) then 
       return false
@@ -74,3 +87,4 @@ if weather.reg_weathers.snow == nil then
     clear = snow.clear
   }
 end
+

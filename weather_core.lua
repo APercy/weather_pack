@@ -72,23 +72,23 @@ weather.get_random_pos_by_player_look_dir = function(player)
 
   if look_dir.x > 0 then
     if look_dir.z > 0 then
-      random_pos_x = math.random() + math.random(player_pos.x - 2.5, player_pos.x + 10)
-      random_pos_z = math.random() + math.random(player_pos.z - 2.5, player_pos.z + 10)
+      random_pos_x = math.random() + math.random(player_pos.x - 2.5, player_pos.x + 5)
+      random_pos_z = math.random() + math.random(player_pos.z - 2.5, player_pos.z + 5)
     else
-      random_pos_x = math.random() + math.random(player_pos.x - 2.5, player_pos.x + 10)
-      random_pos_z = math.random() + math.random(player_pos.z - 10, player_pos.z + 2.5)
+      random_pos_x = math.random() + math.random(player_pos.x - 2.5, player_pos.x + 5)
+      random_pos_z = math.random() + math.random(player_pos.z - 5, player_pos.z + 2.5)
     end
   else
     if look_dir.z > 0 then
-      random_pos_x = math.random() + math.random(player_pos.x - 10, player_pos.x + 2.5)
-      random_pos_z = math.random() + math.random(player_pos.z - 2.5, player_pos.z + 10)
+      random_pos_x = math.random() + math.random(player_pos.x - 5, player_pos.x + 2.5)
+      random_pos_z = math.random() + math.random(player_pos.z - 2.5, player_pos.z + 5)
     else
-      random_pos_x = math.random() + math.random(player_pos.x - 10, player_pos.x + 2.5)
-      random_pos_z = math.random() + math.random(player_pos.z - 10, player_pos.z + 2.5)
+      random_pos_x = math.random() + math.random(player_pos.x - 5, player_pos.x + 2.5)
+      random_pos_z = math.random() + math.random(player_pos.z - 5, player_pos.z + 2.5)
     end
   end
 
-  random_pos_y = math.random() + math.random(player_pos.y + 1, player_pos.y + 7)
+  random_pos_y = math.random() + math.random(player_pos.y + 1, player_pos.y + 3)
   return random_pos_x, random_pos_y, random_pos_z
 end
 

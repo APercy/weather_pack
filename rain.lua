@@ -11,6 +11,8 @@ rain = {
   -- keeping last timeofday value (rounded). 
   -- Defaulted to non-existing value for initial comparing.
   sky_last_update = -1,
+
+  init_done = false,
 }
 
 rain.sound_handler = function(player) 
@@ -22,14 +24,14 @@ rain.sound_handler = function(player)
 end
 
 -- set skybox based on time (uses skycolor api)
-rain.set_sky_box = function(player)
-  skycolor.colors = {
-    {r=0, g=0, b=0},
+rain.set_sky_box = function()
+  skycolor.add_layer(
+    "weather-pack-rain-sky",
+    {{r=0, g=0, b=0},
     {r=85, g=86, b=98},
     {r=152, g=150, b=159},
     {r=85, g=86, b=98},
-    {r=0, g=0, b=0},
-  }
+    {r=0, g=0, b=0}})
   skycolor.active = true
 end
 
@@ -128,9 +130,8 @@ end
 rain.clear = function() 
   rain.raining = false
   rain.sky_last_update = -1
-  skycolor.active = false
-  skycolor.colors = {}
-  skycolor.set_default_sky()
+  rain.init_done = false
+  skycolor.remove_layer("weather-pack-rain-sky")
   for _, player in ipairs(minetest.get_connected_players()) do
     rain.remove_sound(player)
     rain.remove_player(player)
@@ -146,8 +147,11 @@ minetest.register_globalstep(function(dtime)
 end)
 
 rain.make_weather = function()
-  rain.raining = true
-  rain.set_sky_box()
+  if rain.init_done == false then
+    rain.raining = true
+    rain.set_sky_box()
+  end
+
   for _, player in ipairs(minetest.get_connected_players()) do
     if (weather.is_underwater(player)) then 
       return false
