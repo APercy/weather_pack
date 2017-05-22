@@ -4,44 +4,46 @@ Weather mod for Minetest (http://minetest.net/)
 
 Weathers included
 -----------------------
-* rain
+* light_rain, rain, heavy_rain
 * snow
-* thunder
+* thunder (works together with heavy_rain)
 
 Commands
 -----------------------
-`set_weather <weather>` requires `weather_manager` privilege.
+requires `weather_manager` privilege.
+
+  * `start_weather <weather_code>` 
+  * `stop_weather <weather_code>` 
 
 Dependencies
 -----------------------
 Thunder weather requres [lightning](https://github.com/minetest-mods/lightning) mod.
 
-Configuration properties
------------------------
-Weather mod for indoor check depends on sunlight propogation check. Some nodes (e.g. glass block) propogates sunlight and thus weather particles will go through it. To change that set `weather_allow_override_nodes=true` in `minetest.conf` file. Be aware that just few nodes will be override and these blocks needs to be re-builded to take effect. Maybe in future other 'cheap' way to check indoor will be available.
-
-Weather mod mostly relies on particles generation however for some small things ABM may be used. Users which do not want it can disable ABM with property `weather_allow_abm=false`.
-
 License of source code:
 -----------------------
-LGPL 2.1+
+MIT
 
 Authors of media files:
 -----------------------
 
-TeddyDesTodes:
-Snowflakes licensed under CC-BY-SA 3.0 by from weather branch at https://github.com/TeddyDesTodes/minetest/tree/weather
-
-  * `weather_pack_snow_snowflake1.png` - CC-BY-SA 3.0
-  * `weather_pack_snow_snowflake2.png` - CC-BY-SA 3.0
-
 xeranas:
 
-  * `weather_pack_rain_raindrop_1.png` - CC-0
-  * `weather_pack_rain_raindrop_2.png` - CC-0
-  * `weather_pack_rain_raindrop_3.png` - CC-0
+  * `happy_weather_heavy_rain_drops.png` - CC-0
+  * `happy_weather_light_rain_raindrop_1.png` - CC-0
+  * `happy_weather_light_rain_raindrop_2.png` - CC-0
+  * `happy_weather_light_rain_raindrop_3.png` - CC-0
+  * `happy_weather_light_snow_snowflake_1.png` - CC-0
+  * `happy_weather_light_snow_snowflake_2.png` - CC-0
+  * `happy_weather_light_snow_snowflake_3.png` - CC-0
 
 inchadney (http://freesound.org/people/inchadney/):
 
-  * `weather_rain.ogg` - CC-BY-SA 3.0 (cut from http://freesound.org/people/inchadney/sounds/58835/)
+  * `rain_drop.ogg` - CC-BY-SA 3.0 (cut from http://freesound.org/people/inchadney/sounds/58835/)
 
+rcproductions54 (http://freesound.org/people/rcproductions54/):
+
+  * `light_rain_drop.ogg` - CC-0 (http://freesound.org/people/rcproductions54/sounds/265045/)
+
+uberhuberman
+
+  * `heavy_rain_drop.ogg` - CC BY 3.0 (https://www.freesound.org/people/uberhuberman/sounds/21189/)
