@@ -21,9 +21,9 @@ dofile(modpath.."/snow.lua")
 
 if minetest.get_modpath("lightning") ~= nil then
   dofile(modpath.."/thunder.lua")
+  
+  -- Turn off lightning mod 'auto mode'
+  lightning.auto = false
 end
-
--- Turn off lightning mod 'auto mode'
-lightning.auto = false
 
 dofile(modpath.."/abm.lua")
