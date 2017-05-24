@@ -44,7 +44,7 @@ end
 rain.is_ending = function(dtime)
   if rain.last_check + rain.check_interval < os.time() then
     rain.last_check = os.time()
-    if math.random() < 0.3 then
+    if math.random() < 0.6 then
       happy_weather.request_to_start("light_rain")
       return true
     end

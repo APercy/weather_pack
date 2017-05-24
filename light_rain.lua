@@ -26,7 +26,7 @@ local SKYCOLOR_LAYER = "happy_weather_light_rain_sky"
 light_rain.is_starting = function(dtime, position)
 	if light_rain.last_check + light_rain.check_interval < os.time() then
 		light_rain.last_check = os.time()
-		if math.random() < 0.2 then
+		if math.random() < 0.15 then
 			return true
 		end
 	end
@@ -42,7 +42,7 @@ end
 light_rain.is_ending = function(dtime)
 	if light_rain.last_check + light_rain.check_interval < os.time() then
 		light_rain.last_check = os.time()
-		if math.random() < 0.4 then
+		if math.random() < 0.5 then
 			return true
 		end
 	end
