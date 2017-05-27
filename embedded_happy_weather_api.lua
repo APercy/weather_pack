@@ -12,6 +12,73 @@ happy_weather = {}
 local registered_weathers = {}
 local active_weathers = {}
 
+------------------------------------
+-- Local helper / utility methods --
+------------------------------------
+
+-- Adds weather to active_weathers table
+local add_active_weather = function(weather_obj)
+	table.insert(active_weathers, weather_obj)
+end
+
+-- Remove weather from active_weathers table
+local remove_active_weather = function(weather_code)
+	if #active_weathers == 0 then
+		return
+	end
+
+	for k, weather_ in ipairs(active_weathers) do
+		if weather_.code == weather_code then
+			table.remove(active_weathers, k)
+			return
+		end
+	end
+end
+
+-- Returns active weather
+local get_active_weather = function(weather_code)
+	if #active_weathers == 0 then
+		return nil
+	end
+
+	for k, weather_ in ipairs(active_weathers) do
+		if weather_.code == weather_code then
+			return weather_
+		end
+	end
+end
+
+-- adds player to affected_players table
+local add_player = function(affected_players, player)
+	table.insert(affected_players, player)
+end
+
+-- remove player from affected_players table
+local remove_player = function(affected_players, player_name)
+	if #affected_players == 0 then
+		return
+	end
+
+	for k, player_ in ipairs(affected_players) do
+		if player_:get_player_name() == player_name then
+			table.remove(affected_players, k)
+			return
+		end
+	end
+end
+
+local is_player_affected = function(affected_players, player_name)
+	if #affected_players == 0 then
+		return false
+	end
+
+	for k, player_ in ipairs(affected_players) do
+		if player_:get_player_name() == player_name then
+			return true
+		end
+	end
+end
+
 ---------------------------
 -- Weather API functions --
 ---------------------------
@@ -63,58 +130,17 @@ happy_weather.request_to_end = function(weather_code)
 	end
 end
 
-------------------------------------
--- Local helper / utility methods --
-------------------------------------
-
--- Adds weather to active_weathers table
-local add_active_weather = function(weather_obj)
-	table.insert(active_weathers, weather_obj)
-end
-
--- Remove weather from active_weathers table
-local remove_active_weather = function(weather_code)
+happy_weather.is_player_in_weather_area = function(player_name, weather_code)
 	if #active_weathers == 0 then
-		return
-	end
-
-	for k, weather_ in ipairs(active_weathers) do
-		if weather_.code == weather_code then
-			table.remove(active_weathers, k)
-			return
-		end
-	end
-end
-
--- adds player to affected_players table
-local add_player = function(affected_players, player)
-	table.insert(affected_players, player)
-end
-
--- remove player from affected_players table
-local remove_player = function(affected_players, player_name)
-	if #affected_players == 0 then
-		return
-	end
-
-	for k, player_ in ipairs(affected_players) do
-		if player_:get_player_name() == player_name then
-			table.remove(affected_players, k)
-			return
-		end
-	end
-end
-
-local is_player_affected = function(affected_players, player_name)
-	if #affected_players == 0 then
 		return false
 	end
 
-	for k, player_ in ipairs(affected_players) do
-		if player_:get_player_name() == player_name then
-			return true
-		end
+	local active_weather = get_active_weather(weather_code)
+	if active_weather == nil then
+		return false
 	end
+
+	return is_player_affected(active_weather.affected_players, player_name)
 end
 
 -----------------------------------------------------------------------------

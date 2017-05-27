@@ -27,7 +27,6 @@ local thunder_weather_next_check = 0
 local thunder_weather_check_delay = 600 -- to avoid checks continuously
 
 thunder.is_starting = function(dtime)
-	checked = false
 	thunder.next_strike = 0
 	thunder.min_delay = 5
 	thunder.max_delay = math.random(5, 45)
