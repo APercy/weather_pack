@@ -68,6 +68,11 @@ local calculate_thunder_strike_delay = function()
 end
 
 thunder.render = function(dtime, player)
+	if happy_weather.is_player_in_weather_area(player:get_player_name(), 
+		"heavy_rain") == false then
+		return
+	end
+
 	if thunder.next_strike <= os.time() then
 		lightning.strike()
 		calculate_thunder_strike_delay()

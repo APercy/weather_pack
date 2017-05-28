@@ -8,7 +8,7 @@
 
 local heavy_rain = {}
 heavy_rain.last_check = 0
-heavy_rain.check_interval = 600
+heavy_rain.check_interval = 200
 
 -- Weather identification code
 heavy_rain.code = "heavy_rain"
@@ -26,7 +26,12 @@ local SKYCOLOR_LAYER = "happy_weather_heavy_rain_sky"
 heavy_rain.is_starting = function(dtime, position)
 	if heavy_rain.last_check + heavy_rain.check_interval < os.time() then
 		heavy_rain.last_check = os.time()
-		if math.random() < 0.05 then
+		local heavy_rain_chance = 0.06
+		if hw_utils.is_biome_tropic(position) then
+			heavy_rain_chance = 0.4
+		end
+
+		if math.random() < heavy_rain_chance then
 			happy_weather.request_to_end("light_rain")
       		happy_weather.request_to_end("rain")
 			return true
@@ -45,7 +50,9 @@ heavy_rain.is_ending = function(dtime)
 	if heavy_rain.last_check + heavy_rain.check_interval < os.time() then
 		heavy_rain.last_check = os.time()
 		if math.random() < 0.7 then
-			happy_weather.request_to_start("rain")
+			if math.random() < 0.4 then
+				happy_weather.request_to_start("rain")
+			end
 			return true
 		end
 	end
@@ -146,6 +153,7 @@ local add_wide_range_rain_particle = function(player)
 		  collisiondetection = true,
 		  collision_removal = true,
 		  vertical = true,
+		  
 		  texture = rain_drop_texture,
 		  playername = player:get_player_name()
 		})
@@ -178,6 +186,11 @@ heavy_rain.stop = function()
 end
 
 heavy_rain.in_area = function(position)
+	if hw_utils.is_biome_frozen(position) or 
+		hw_utils.is_biome_dry(position) then
+		return false
+	end
+
 	if position.y > -10 then
 		return true
 	end

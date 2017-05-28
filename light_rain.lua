@@ -8,7 +8,7 @@
 
 local light_rain = {}
 light_rain.last_check = 0
-light_rain.check_interval = 300
+light_rain.check_interval = 200
 
 -- Weather identification code
 light_rain.code = "light_rain"
@@ -144,6 +144,11 @@ local display_rain_particles = function(player)
 end
 
 light_rain.in_area = function(position)
+	if hw_utils.is_biome_frozen(position) or 
+		hw_utils.is_biome_dry(position) then
+		return false
+	end
+
 	if position.y > -10 then
 		return true
 	end

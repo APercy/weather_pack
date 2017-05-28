@@ -7,6 +7,8 @@
 ------------------------------
 
 local snow = {}
+snow.last_check = 0
+snow.check_interval = 200
 
 -- Weather identification code
 snow.code = "snow"
@@ -19,6 +21,13 @@ local manual_trigger_end = false
 local SKYCOLOR_LAYER = "happy_weather_snow_sky"
 
 snow.is_starting = function(dtime, position)
+  if snow.last_check + snow.check_interval < os.time() then
+    snow.last_check = os.time()
+    if math.random() < 0.2 then
+      return true
+    end
+  end
+
 	if manual_trigger_start then
 		manual_trigger_start = false
 		return true
@@ -28,6 +37,13 @@ snow.is_starting = function(dtime, position)
 end
 
 snow.is_ending = function(dtime)
+  if snow.last_check + snow.check_interval < os.time() then
+    snow.last_check = os.time()
+    if math.random() < 0.5 then
+      return true
+    end
+  end
+
 	if manual_trigger_end then
 		manual_trigger_end = false
 		return true
@@ -109,6 +125,17 @@ snow.render = function(dtime, player)
   for i=particles_number_per_update, 1,-1 do
     display_particles(player)
   end
+end
+
+snow.in_area = function(position)
+  if hw_utils.is_biome_frozen(position) == false then
+    return false
+  end
+
+  if position.y > -10 then
+    return true
+  end
+  return false
 end
 
 snow.start = function()
