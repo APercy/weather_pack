@@ -15,6 +15,8 @@ requires `weather_manager` privilege.
   * `start_weather <weather_code>` 
   * `stop_weather <weather_code>` 
 
+Be aware that weather may not be visible for player until player is in right biome.
+
 Dependencies
 -----------------------
 Thunder weather requres [lightning](https://github.com/minetest-mods/lightning) mod.
