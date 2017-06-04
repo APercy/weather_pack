@@ -156,11 +156,11 @@ end
 
 local update_plain_sky = function(player, layer_data)
 	local color = get_current_layer_color(layer_data)
-	player:set_sky(color, "plain", nil)
+	player:set_sky(color, "plain", nil, false)
 end
 
 local update_solid_color_sky = function(player, layer_data)
-	player:set_sky(layer_data.color, "plain", nil)
+	player:set_sky(layer_data.color, "plain", nil, false)
 end
 
 local update_skybox_sky = function(player, layer_data)
