@@ -2,6 +2,12 @@ weather-pack
 =======================
 Weather mod for Minetest (http://minetest.net/)
 
+Feedback and Improvements
+-----------------------
+* See newest version at https://github.com/xeranas/weather_pack
+* Register bugs at https://github.com/xeranas/weather_pack/issues
+* Questions / Discussion at https://forum.minetest.net/viewtopic.php?f=9&p=215869
+
 Weathers included
 -----------------------
 * light_rain, rain, heavy_rain
