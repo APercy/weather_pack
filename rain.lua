@@ -9,6 +9,7 @@
 local rain = {}
 rain.last_check = 0
 rain.check_interval = 300
+rain.chance = 0.1
 
 -- Weather identification code
 rain.code = "rain"
@@ -24,14 +25,14 @@ local manual_trigger_end = false
 local SKYCOLOR_LAYER = "happy_weather_rain_sky"
 
 rain.is_starting = function(dtime, position)
-  if rain.last_check + rain.check_interval < os.time() then
-    rain.last_check = os.time()
-    if math.random() < 0.1 then
-      happy_weather.request_to_end("light_rain")
-      happy_weather.request_to_end("heavy_rain")
-      return true
-    end
-  end
+	if rain.last_check + rain.check_interval < os.time() then
+		rain.last_check = os.time()
+		if math.random() < rain.chance then
+			happy_weather.request_to_end("light_rain")
+			happy_weather.request_to_end("heavy_rain")
+			return true
+		end
+	end
 
 	if manual_trigger_start then
 		manual_trigger_start = false
@@ -42,13 +43,13 @@ rain.is_starting = function(dtime, position)
 end
 
 rain.is_ending = function(dtime)
-  if rain.last_check + rain.check_interval < os.time() then
-    rain.last_check = os.time()
-    if math.random() < 0.6 then
-      happy_weather.request_to_start("light_rain")
-      return true
-    end
-  end
+	if rain.last_check + rain.check_interval < os.time() then
+		rain.last_check = os.time()
+		if math.random() < 0.6 then
+			happy_weather.request_to_start("light_rain")
+			return true
+		end
+	end
 
 	if manual_trigger_end then
 		manual_trigger_end = false
@@ -86,7 +87,7 @@ local remove_rain_sound = function(player)
 	if sound ~= nil then
 		minetest.sound_stop(sound)
 		sound_handlers[player:get_player_name()] = nil
-  	end
+	end
 end
 
 rain.add_player = function(player)
@@ -101,16 +102,10 @@ end
 
 -- Random texture getter
 local choice_random_rain_drop_texture = function()
-	local texture_name
-	local random_number = math.random()
-  if random_number > 0.33 then
-    texture_name = "happy_weather_light_rain_raindrop_1.png"
-  elseif random_number > 0.66 then
-    texture_name = "happy_weather_light_rain_raindrop_2.png"
-  else
-    texture_name = "happy_weather_light_rain_raindrop_3.png"
-  end
-	return texture_name;
+	local base_name = "happy_weather_light_rain_raindrop_"
+	local number = math.random(1, 4)
+	local extension = ".png"
+	return base_name .. number .. extension
 end
 
 local add_rain_particle = function(player)
@@ -124,16 +119,16 @@ local add_rain_particle = function(player)
 
 	if hw_utils.is_outdoor(random_pos) then
 		minetest.add_particle({
-		  pos = {x=random_pos.x, y=random_pos.y, z=random_pos.z},
-		  velocity = {x=0, y=-15, z=0},
-		  acceleration = {x=0, y=-35, z=0},
-		  expirationtime = 2,
-		  size = math.random(1, 6),
-		  collisiondetection = true,
-		  collision_removal = true,
-		  vertical = true,
-		  texture = choice_random_rain_drop_texture(),
-		  playername = player:get_player_name()
+			pos = {x=random_pos.x, y=random_pos.y, z=random_pos.z},
+			velocity = {x=0, y=-15, z=0},
+			acceleration = {x=0, y=-35, z=0},
+			expirationtime = 2,
+			size = math.random(1, 4),
+			collisiondetection = true,
+			collision_removal = true,
+			vertical = true,
+			texture = choice_random_rain_drop_texture(),
+			playername = player:get_player_name()
 		})
 	end
 end
@@ -147,10 +142,10 @@ local display_rain_particles = function(player)
 end
 
 rain.in_area = function(position)
-  if hw_utils.is_biome_frozen(position) or 
-    hw_utils.is_biome_dry(position) then
-    return false
-  end
+	if hw_utils.is_biome_frozen(position) or 
+		hw_utils.is_biome_dry(position) then
+		return false
+	end
 
 	if position.y > -10 then
 		return true

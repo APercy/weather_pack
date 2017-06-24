@@ -11,6 +11,7 @@
 local thunder = {}
 thunder.last_check = 0
 thunder.check_interval = 100
+thunder.chance = 0.8
 
 -- Weather identification code
 thunder.code = "thunder"
@@ -33,7 +34,7 @@ thunder.is_starting = function(dtime)
 
 	if thunder.last_check + thunder.check_interval < os.time() then
 		thunder.last_check = os.time()
-		if math.random() < 0.8 and happy_weather.is_weather_active("heavy_rain") then
+		if math.random() < thunder.chance and happy_weather.is_weather_active("heavy_rain") then
 			return true
 		end
 	end
@@ -68,8 +69,8 @@ local calculate_thunder_strike_delay = function()
 end
 
 thunder.render = function(dtime, player)
-	if happy_weather.is_player_in_weather_area(player:get_player_name(), 
-		"heavy_rain") == false then
+	local player_name = player:get_player_name()
+	if happy_weather.is_player_in_weather_area(player_name, "heavy_rain") == false then
 		return
 	end
 

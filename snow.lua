@@ -9,6 +9,7 @@
 local snow = {}
 snow.last_check = 0
 snow.check_interval = 200
+snow.chance = 0.2
 
 -- Weather identification code
 snow.code = "snow"
@@ -21,12 +22,12 @@ local manual_trigger_end = false
 local SKYCOLOR_LAYER = "happy_weather_snow_sky"
 
 snow.is_starting = function(dtime, position)
-  if snow.last_check + snow.check_interval < os.time() then
-    snow.last_check = os.time()
-    if math.random() < 0.2 then
-      return true
-    end
-  end
+	if snow.last_check + snow.check_interval < os.time() then
+		snow.last_check = os.time()
+		if math.random() < snow.chance then
+			return true
+		end
+	end
 
 	if manual_trigger_start then
 		manual_trigger_start = false
@@ -37,12 +38,12 @@ snow.is_starting = function(dtime, position)
 end
 
 snow.is_ending = function(dtime)
-  if snow.last_check + snow.check_interval < os.time() then
-    snow.last_check = os.time()
-    if math.random() < 0.5 then
-      return true
-    end
-  end
+	if snow.last_check + snow.check_interval < os.time() then
+		snow.last_check = os.time()
+		if math.random() < 0.5 then
+			return true
+		end
+	end
 
 	if manual_trigger_end then
 		manual_trigger_end = false
@@ -59,7 +60,7 @@ local set_sky_box = function(player_name)
 	sl.data = {gradient_data={}}
 	sl.data.gradient_data.colors = {
 		{r=0, g=0, b=0},
-		{r=241, g=244, b=249},
+		{r=231, g=234, b=239},
 		{r=0, g=0, b=0}
 	}
 	skylayer.add_layer(player_name, sl)
@@ -75,16 +76,10 @@ end
 
 -- Random texture getter
 local choice_random_rain_drop_texture = function()
-	local texture_name
-	local random_number = math.random()
-	if random_number > 0.33 then
-		texture_name = "happy_weather_light_snow_snowflake_1.png"
-	elseif random_number > 0.66 then
-		texture_name = "happy_weather_light_snow_snowflake_2.png"
-	else
-		texture_name = "happy_weather_light_snow_snowflake_3.png"
-	end
-	return texture_name;
+	local base_name = "happy_weather_light_snow_snowflake_"
+	local number = math.random(1, 3)
+	local extension = ".png"
+	return base_name .. number .. extension
 end
 
 local add_particle = function(player)
@@ -100,9 +95,9 @@ local add_particle = function(player)
 		minetest.add_particle({
 			pos = {x=random_pos.x, y=random_pos.y, z=random_pos.z},
 			velocity = {x = math.random(-1,-0.5), y = math.random(-2,-1), z = math.random(-1,-0.5)},
-        	acceleration = {x = math.random(-1,-0.5), y=-0.5, z = math.random(-1,-0.5)},
-        	expirationtime = 2.0,
-        	size = math.random(0.5, 2),
+			acceleration = {x = math.random(-1,-0.5), y=-0.5, z = math.random(-1,-0.5)},
+			expirationtime = 2.0,
+			size = math.random(0.5, 2),
 			collisiondetection = true,
 			collision_removal = true,
 			vertical = true,
@@ -123,19 +118,19 @@ end
 local particles_number_per_update = 10
 snow.render = function(dtime, player)
   for i=particles_number_per_update, 1,-1 do
-    display_particles(player)
+	display_particles(player)
   end
 end
 
 snow.in_area = function(position)
-  if hw_utils.is_biome_frozen(position) == false then
-    return false
-  end
+	if hw_utils.is_biome_frozen(position) == false then
+		return false
+	end
 
-  if position.y > -10 then
-    return true
-  end
-  return false
+	if position.y > -10 then
+		return true
+	end
+	return false
 end
 
 snow.start = function()

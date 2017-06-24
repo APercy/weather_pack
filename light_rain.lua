@@ -9,6 +9,7 @@
 local light_rain = {}
 light_rain.last_check = 0
 light_rain.check_interval = 200
+light_rain.chance = 0.15
 
 -- Weather identification code
 light_rain.code = "light_rain"
@@ -26,7 +27,7 @@ local SKYCOLOR_LAYER = "happy_weather_light_rain_sky"
 light_rain.is_starting = function(dtime, position)
 	if light_rain.last_check + light_rain.check_interval < os.time() then
 		light_rain.last_check = os.time()
-		if math.random() < 0.15 then
+		if math.random() < light_rain.chance then
 			return true
 		end
 	end
@@ -83,7 +84,7 @@ local remove_rain_sound = function(player)
 	if sound ~= nil then
 		minetest.sound_stop(sound)
 		sound_handlers[player:get_player_name()] = nil
-  	end
+	end
 end
 
 light_rain.add_player = function(player)
@@ -98,16 +99,10 @@ end
 
 -- Random texture getter
 local choice_random_rain_drop_texture = function()
-	local texture_name
-	local random_number = math.random()
-	if random_number > 0.33 then
-		texture_name = "happy_weather_light_rain_raindrop_1.png"
-	elseif random_number > 0.66 then
-		texture_name = "happy_weather_light_rain_raindrop_2.png"
-	else
-		texture_name = "happy_weather_light_rain_raindrop_3.png"
-	end
-	return texture_name;
+	local base_name = "happy_weather_light_rain_raindrop_"
+	local number = math.random(1, 4)
+	local extension = ".png"
+	return base_name .. number .. extension
 end
 
 local add_rain_particle = function(player)
@@ -121,16 +116,16 @@ local add_rain_particle = function(player)
 
 	if hw_utils.is_outdoor(random_pos) then
 		minetest.add_particle({
-		  pos = {x=random_pos.x, y=random_pos.y, z=random_pos.z},
-		  velocity = {x=0, y=-10, z=0},
-		  acceleration = {x=0, y=-30, z=0},
-		  expirationtime = 2,
-		  size = math.random(0.5, 3),
-		  collisiondetection = true,
-		  collision_removal = true,
-		  vertical = true,
-		  texture = choice_random_rain_drop_texture(),
-		  playername = player:get_player_name()
+			pos = {x=random_pos.x, y=random_pos.y, z=random_pos.z},
+			velocity = {x=0, y=-10, z=0},
+			acceleration = {x=0, y=-30, z=0},
+			expirationtime = 2,
+			size = math.random(0.5, 3),
+			collisiondetection = true,
+			collision_removal = true,
+			vertical = true,
+			texture = choice_random_rain_drop_texture(),
+			playername = player:get_player_name()
 		})
 	end
 end
