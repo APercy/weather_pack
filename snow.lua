@@ -117,9 +117,9 @@ end
 
 local particles_number_per_update = 10
 snow.render = function(dtime, player)
-  for i=particles_number_per_update, 1,-1 do
-	display_particles(player)
-  end
+	for i=particles_number_per_update, 1,-1 do
+		display_particles(player)
+	end
 end
 
 snow.in_area = function(position)
@@ -127,7 +127,7 @@ snow.in_area = function(position)
 		return false
 	end
 
-	if position.y > -10 then
+	if position.y > -10 and position.y < 120 then
 		return true
 	end
 	return false
