@@ -98,7 +98,7 @@ local np_humid = {
 hw_utils.is_biome_frozen = function(position)
   local mg_name = minetest.get_mapgen_setting("mg_name")
   if mg_name == "v6" then
-    return true -- v6 not supported yet.
+    return false -- v6 not supported yet.
   end
   return hw_utils.is_biome_frozen_v7(position)
 end
@@ -116,7 +116,7 @@ end
 hw_utils.is_biome_dry = function(position)
   local mg_name = minetest.get_mapgen_setting("mg_name")
   if mg_name == "v6" then
-    return true -- v6 not supported yet.
+    return false -- v6 not supported yet.
   end
   return hw_utils.is_biome_dry_v7(position)
 end
