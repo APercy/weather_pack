@@ -10,6 +10,8 @@ if hw_utils == nil then
 	hw_utils = {}
 end
 
+local mg_name = minetest.get_mapgen_setting("mg_name")
+
 -- outdoor check based on node light level
 hw_utils.is_outdoor = function(pos, offset_y)
 	if offset_y == nil then
@@ -95,7 +97,27 @@ local np_humid = {
 	lacunarity = 2.0
 }
 
-local is_biome_frozen_v7 = function(position)
+local np_biome_v6 = {
+	offset = 0, 
+	scale = 1.0,
+	spread = {x = 500.0, y = 500.0, z = 500.0},
+	seed = 9130,
+	octaves = 3,
+	persist = 0.50,
+	lacunarity = 2.0
+}
+
+local np_humidity_v6 = {
+	offset = 0.5,
+	scale = 0.5,
+	spread = {x = 500.0, y = 500.0, z = 500.0},
+	seed = 72384,
+	octaves = 4,
+	persist = 0.66,
+	lacunarity = 2.0
+}
+
+local is_biome_frozen = function(position)
 	local posx = math.floor(position.x)
 	local posz = math.floor(position.z)
 	local noise_obj = minetest.get_perlin(np_temp)
@@ -106,14 +128,22 @@ local is_biome_frozen_v7 = function(position)
 end
 
 hw_utils.is_biome_frozen = function(position)
-	local mg_name = minetest.get_mapgen_setting("mg_name")
 	if mg_name == "v6" then
 		return false -- v6 not supported yet.
 	end
-	return is_biome_frozen_v7(position)
+	return is_biome_frozen(position)
 end
 
-local is_biome_dry_v7 = function(position)
+local is_biome_dry_v6 = function(position)
+	local posx = math.floor(position.x)
+	local posz = math.floor(position.z)
+	local noise_obj = minetest.get_perlin(np_biome_v6)
+	local noise_biome = noise_obj:get2d({x = posx, y = posz})
+	-- TODO futher investigation needed towards on biome check for v6 mapgen
+	return noise_biome > 0.45
+end
+
+local is_biome_dry = function(position)
 	local posx = math.floor(position.x)
 	local posz = math.floor(position.z)
 	local noise_obj = minetest.get_perlin(np_humid)
@@ -124,14 +154,13 @@ local is_biome_dry_v7 = function(position)
 end
 
 hw_utils.is_biome_dry = function(position)
-	local mg_name = minetest.get_mapgen_setting("mg_name")
 	if mg_name == "v6" then
-		return false -- v6 not supported yet.
+		return false
 	end
-	return is_biome_dry_v7(position)
+	return is_biome_dry(position)
 end
 
-local is_biome_tropic_v7 = function(position)
+local is_biome_tropic = function(position)
 	local posx = math.floor(position.x)
 	local posz = math.floor(position.z)
 	local noise_obj = minetest.get_perlin(np_humid)
@@ -144,9 +173,8 @@ local is_biome_tropic_v7 = function(position)
 end
 
 hw_utils.is_biome_tropic = function(position)
-	local mg_name = minetest.get_mapgen_setting("mg_name")
 	if mg_name == "v6" then
 		return false -- v6 not supported yet.
 	end
-	return is_biome_tropic_v7(position)
+	return is_biome_tropic(position)
 end
