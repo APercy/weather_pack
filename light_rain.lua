@@ -67,7 +67,7 @@ local set_sky_box = function(player_name)
 			{r=120, g=120, b=120},
 			{r=50, g=50, b=50}
 		},
-		density = 0.7
+		density = 0.6
 	}
 	skylayer.add_layer(player_name, sl)
 end
