@@ -137,6 +137,40 @@ local add_wide_range_rain_particle = function(player)
 	end
 end
 
+
+-- Random texture getter
+local choice_random_rain_drop_texture = function()
+	local base_name = "happy_weather_light_snow_snowflake_"
+	local number = math.random(1, 3)
+	local extension = ".png"
+	return base_name .. number .. extension
+end
+
+local add_snow_particle = function(player)
+	local offset = {
+		front = 5,
+		back = 2,
+		top = 4
+	}
+
+	local random_pos = hw_utils.get_random_pos(player, offset)
+
+	if hw_utils.is_outdoor(random_pos) then
+		minetest.add_particle({
+			pos = {x=random_pos.x, y=random_pos.y, z=random_pos.z},
+			velocity = {x = math.random(-5,-2.5), y = math.random(-10,-5), z = math.random(-5,-2.5)},
+			acceleration = {x = math.random(-5,-2.5), y=-2.5, z = math.random(-5,-2.5)},
+			expirationtime = 2.0,
+			size = math.random(1, 3),
+			collisiondetection = true,
+			collision_removal = true,
+			vertical = true,
+			texture = choice_random_rain_drop_texture(),
+			playername = player:get_player_name()
+		})
+	end
+end
+
 local display_particles = function(player)
 	if hw_utils.is_underwater(player) then
 		return
@@ -145,6 +179,11 @@ local display_particles = function(player)
 	local particles_number_per_update = 3
 	for i=particles_number_per_update, 1,-1 do
 		add_wide_range_rain_particle(player)
+	end
+
+	local snow_particles_number_per_update = 10
+	for i=snow_particles_number_per_update, 1,-1 do
+		add_snow_particle(player)
 	end
 end
 
