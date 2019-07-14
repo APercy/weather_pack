@@ -10,9 +10,9 @@ local snowstorm = {}
 
 -- Weather identification code
 snowstorm.code = "snowstorm"
-snow.last_check = 0
-snow.check_interval = 400
-snow.chance = 0.04
+snowstorm.last_check = 0
+snowstorm.check_interval = 5
+snowstorm.chance = 1
 
 -- Keeps sound handler references
 local sound_handlers = {}
@@ -41,6 +41,13 @@ local remove_weather_sound = function(player)
 end
 
 snowstorm.is_starting = function(dtime, position)
+	if snowstorm.last_check + snowstorm.check_interval < os.time() then
+		snowstorm.last_check = os.time()
+		if math.random() < snowstorm.chance then
+			return true
+		end
+	end
+
 	if manual_trigger_start then
 		manual_trigger_start = false
 		return true
@@ -65,24 +72,22 @@ local set_sky_box = function(player_name)
 	sl.sky_data = {
 		gradient_colors = {
 			{r=0, g=0, b=0},
-			{r=70, g=70, b=85},
-			{r=120, g=120, b=125},
-			{r=70, g=70, b=85},
+			{r=231, g=234, b=239},
 			{r=0, g=0, b=0}
 		}
 	}
-	sl.clouds_data = {
-		gradient_colors = {
-			{r=10, g=10, b=10},
-			{r=65, g=66, b=78},
-			{r=112, g=110, b=119},
-			{r=65, g=66, b=78},
-			{r=10, g=10, b=10}
-		},
-		speed = {z = 30, y = -80},
-		density = 0.6
-	}
 	skylayer.add_layer(player_name, sl)
+end
+
+snowstorm.in_area = function(position)
+	if hw_utils.is_biome_frozen(position) == false then
+		return false
+	end
+
+	if position.y > 30 and position.y < 140 then
+		return true
+	end
+	return false
 end
 
 snowstorm.add_player = function(player)
