@@ -230,6 +230,8 @@ core.update_sky_details = function(player, sky_layer)
     }
 	--player:set_sky(bgcolor, sky_type, sky_data.textures, clouds)
     player:set_sun({visible=false})
+    player:set_stars({visible=false})
+    player:set_moon({visible=false})
     player:set_sky(sky_parameters)
 end
 
