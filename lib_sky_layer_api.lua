@@ -222,7 +222,15 @@ core.update_sky_details = function(player, sky_layer)
 	if sky_data.clouds ~= nil then
 		clouds = sky_data.clouds
 	end
-	player:set_sky(bgcolor, sky_type, sky_data.textures, clouds)	
+    local sky_parameters = {
+        base_color = bgcolor,
+        type = sky_type,
+        textures = sky_data.textures,
+        clouds = clouds
+    }
+	--player:set_sky(bgcolor, sky_type, sky_data.textures, clouds)
+    player:set_sun({visible=false})
+    player:set_sky(sky_parameters)
 end
 
 core.update_clouds_details = function(player, sky_layer)
