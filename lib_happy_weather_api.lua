@@ -286,7 +286,7 @@ local render_if_in_area = function(weather_obj, dtime, player)
 			weather_render(weather_obj, dtime, player)
 			add_meta_plawpos(weather_obj.code, player)
 		else
-			if (is_outside_recent_weather(weather_obj.code, player)) then
+			if (is_outside_recent_weather(weather_obj.code, player) or player:get_pos().y > 400) then
 				weather_remove_player(weather_obj, player)
 				remove_player(weather_obj.affected_players, player:get_player_name())
 			-- render weather until player will be completely outside weather range
